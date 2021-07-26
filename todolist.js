@@ -13,7 +13,7 @@
 //Todolist 的数据由输入框接收。可用一个对象 obj 来表征，
 //obj属性是text（输入的内容）、status（布尔值来表示 完成/未完成）、time（输入时间）、del（删除标签）
 //输入后将该对象放入数组中，根据属性：time 进行排序。显示时，通过遍历数组，根据status分类，分别显示完成项和未完成项。
-//删除时可以将数组中对应的项删除。
+//删除时可以将数组中对应的项删除
 
 //清理所有项
 function clear(){
@@ -23,70 +23,69 @@ function clear(){
 
 //添加(获取）todo
 function gettodo(){
-    var obj = new Object;
-    obj.text = "";
-    obj.status = true;
-    obj.time = Date.now();//没用到
-    obj.del = false;//没用
-
-    obj.text = document.getElementById("title");//获取输入文本
+    var obj = new Object;//可优化：输入为空时可不创建新属性，将这步放在else 里面，减少内存使用
+        obj.status = false;
+        obj.time = Date.now();//没用到
+        obj.del = false;
+    obj.text = document.getElementById("title").value;//加上.value后获取输入文本
+    //alert(obj.text);
     if (obj.text.trim() == "") {
         alert("输入不能为空!");//trim方法的作用：使输入都是空格也会报错
     }else{
         var data = getlocaldata();
         data.push(obj);
         savedata(data);
+        var form = document.getElementById("form");
+        form.reset();//重置输入框
+        load();
     }
 }
 
 //获取本地数据
 function getlocaldata(){
-    var collection = localStorage.getItem("todo");
+    var collection = localStorage.getItem("localdata");
     if (collection != null) {
-        return collection;
+        return JSON.parse(collection);
     }else return [];//无本地数据返回空数组
-}
-
-//
-function saveSort(){
-    var todolist = document.getElementsById("todo");
-    var donelist = document.getElementsById("done");
-    var ts = todolist.getElementByTagName("p");
-    var ds = donelist.getElementByTagName("p");
-    var data = [];
-    for (i = 0; i < ts.length; i++){
-        var todo = {"text": ts[i].innerHTML, "done": true};
-        data.unshift(todo);//向数组开头添加一个新对象
-    }
-    for (i = 0; i < ds.length; i++){
-        var todo = { "text": ds[i].innerHTML,"done": false};
-        data.unshift(todo);
-    }
-    savedata(data);
 }
 
 //保存data
 function savedata(data){
-    localStorage.setItem("todo",data);//将todo项放入数组，并保存
+    localStorage.setItem("localdata", JSON.stringify(data));//将数组保存在“localdata”字段
 }
 
 //删除todo项
 function del(i){  
     var data = getlocaldata();
     //click del按钮 触发del
-    if (data.obj.del){
-        data.splice(i, 1)[0];//删除第i个（当前）data元素
-        savedata(data);
-        load();
-    } 
+    // data[i].del = true;
+    data.splice(i, 1)[0];//删除第i个（当前）data元素
+    savedata(data);
+    load();
+}
+
+//保存分类后的data
+function saveSort() {
+    var todolist = document.getElementById("todolist");
+    var donelist = document.getElementById("donelist");
+    var ts = todolist.getElementsByTagName("p");
+    var ds = donelist.getElementsByTagName("p");
+    var data = [];
+    for (i = 0; i < ts.length; i++) {
+        var todo = { "text": ts[i].innerHTML, "status": false };
+        data.unshift(todo);
+    }
+    for (i = 0; i < ds.length; i++) {
+        var todo = { "text": ds[i].innerHTML, "status": true };
+        data.unshift(todo);
+    }      
+    saveData(data);
 }
 
 //更新data
-function update(i,field,text){
+function update(i,text){
     var data = getlocaldata();
-    var todo = data.splice(i, 1)[0];
-    todo[field] = text;
-    data.splice(i, 0, todo);
+    data[i].status = text;
     savedata(data);
     load();
 }
@@ -97,6 +96,7 @@ function edit(i){
     var p = document.getElementById("p-" + i);
     title = p.innerHTML;
     p.innerHTML = "<input id='input-" + i + "' text='" + title + "' />";
+    var input = document.getElementById("input-" + i);
     input.setSelectionRange(0, input.value.length);
     input.focus();
     input.onblur = function() {
@@ -104,7 +104,7 @@ function edit(i){
             p.innerHTML = title;
             alert("内容不能为空");
         } else {
-            update(i, "title", input.value);
+            update(i, input.value);
         }
     };
 }
@@ -113,26 +113,26 @@ function edit(i){
 function load(){
     var todolist = document.getElementById("todolist");
     var donelist = document.getElementById("donelist");
-    var collection = localStorage.getItem("todo");
+    var collection = localStorage.getItem("localdata");
     if (collection != null){
-        var data = collection;
+        var data = JSON.parse(collection);
         var todoCount = 0;
         var doneCount = 0;
         var todoString = "";
         var doneString = "";//初始化计数值和列表
         for (var i = 0; i < data.length; i++){
-            if (data.obj.done){
-                    doneString += "<li draggable='true'><input type='checkbox' onchange='update(" + i + ",\"done\",false)' checked='checked' />" +
-                        "<p id='p-" + i + "' onclick='edit(" + i + ")'>" + data[i].text + "</p>" +//点击列表，转到编辑函数
-                        "<a href='javascript:del(" + i + ")'>-</a></li>";//点击del按钮，跳转到删除函数
-                    doneCount++;
-                } else {
-                    todoString += "<li draggable='true'><input type='checkbox' onchange='update(" + i + ",\"done\",true)' />" +
-                        "<p id='p-" + i + "' onclick='edit(" + i + ")'>" + data[i].text + "</p>" +
-                        "<a href='javascript:del(" + i + ")'>-</a></li>";
-                    todoCount++;
-                }
-            };
+            if (data[i].status){
+                doneString += "<li><input type='checkbox' onchange='update(" + i + ",false)' checked='checked' />" +
+                    "<p id='p-" + i + "' onclick='edit(" + i + ")'>" + data[i].text + "</p>" +//点击文本，转到编辑函数
+                    "<a href='javascript:del(" + i + ")'>-</a></li>";//点击del按钮，跳转到删除函数
+                doneCount++;
+            } else {
+                todoString += "<li><input type='checkbox' onchange='update(" + i + ",true)' />" +
+                    "<p id='p-" + i + "' onclick='edit(" + i + ")'>" + data[i].text + "</p>" +
+                    "<a href='javascript:del(" + i + ")'>-</a></li>";
+                todoCount++;
+            }
+        };
         todocount.innerHTML = todoCount;
         todolist.innerHTML = todoString;//在id=todolist处插入todoString语句，以显示todo项
         donecount.innerHTML = doneCount;
@@ -143,6 +143,7 @@ function load(){
         donecount.innerHTML = 0;
         donelist.innerHTML = "";
     }
+    saveSort();
 }
 
 window.onload = load;

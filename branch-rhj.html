@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todolist</title>
-    <!-- <link rel="stylesheet" type="text/css" href="todolist.css">  -->
+    <link rel="stylesheet" type="text/css" href="todolist.css"> 
 </head>
 <body>
     <div class="container">
         <!-- 输入todo -->    
         <div class="input">
-            <form>
+            <form action="javascript:gettodo()" id="form">
                 <label for="title">ToDoList</label><!--将input和标签title绑定-->
-                <input type="text" id="todolist" name="todolist" placeholder=" What needs to be done?" autocomplete="off" />
+                <input type="text" id="title" name="title" placeholder=" What needs to be done?" autocomplete="off" />
             </form>
         </div>
         <div class="TodoList">
@@ -21,12 +21,6 @@
             <ol id="todolist" class="demo-box"></ol>
             <h2>Done <span id="donecount"></span></h2>
             <ul id="donelist"></ul>
-            <!-- <form id="todo">
-                <h3>todo: </h3><input type="text" id="todo" name="todo" placeholder=" todo" autocomplete="off" />
-            </form>
-            <form id="done">
-                <h3>done: </h3><input type="text" id="done" name="done" placeholder=" done" autocomplete="off" />
-            </form> -->
         </div>
         <div class="clear">
             <a href="javascript:clear();">Clear All!</a>
