@@ -26,7 +26,7 @@ function gettodo(){
     var obj = new Object;//可优化：输入为空时可不创建新属性，将这步放在else 里面，减少内存使用
         obj.status = false;
         obj.time = Date.now();//没用到
-        obj.del = false;
+        //obj.del = false;
     obj.text = document.getElementById("title").value;//加上.value后获取输入文本
     //alert(obj.text);
     if (obj.text.trim() == "") {
@@ -58,7 +58,7 @@ function savedata(data){
 function del(i){  
     var data = getlocaldata();
     //click del按钮 触发del
-    // data[i].del = true;
+    //data[i].del = true;删除了data[i]，没必要更改del属性
     data.splice(i, 1)[0];//删除第i个（当前）data元素
     savedata(data);
     load();
@@ -79,7 +79,7 @@ function saveSort() {
         var todo = { "text": ds[i].innerHTML, "status": true };
         data.unshift(todo);
     }      
-    saveData(data);
+    //savedata(data);
 }
 
 //更新data
@@ -92,19 +92,22 @@ function update(i,text){
 
 //编辑todo项
 function edit(i){
-    load();
     var p = document.getElementById("p-" + i);
-    title = p.innerHTML;
-    p.innerHTML = "<input id='input-" + i + "' text='" + title + "' />";
-    var input = document.getElementById("input-" + i);
-    input.setSelectionRange(0, input.value.length);
+    title = p.innerHTML;//保存原信息，当输入为空时，保持原信息(data[i].text)不变
+    p.innerHTML = "<input id='input-" + i + "'/>";
+    var input = document.getElementById("input-" + i);//获取输入的内容
     input.focus();
     input.onblur = function() {
         if (input.value.length == 0) {
             p.innerHTML = title;
             alert("内容不能为空");
         } else {
-            update(i, input.value);
+            var data = getlocaldata();
+            var todo = data[i];
+            todo.text = input.value;
+            data.splice(i, 1, todo);//替换当前项的text，其余不变
+            savedata(data);
+            load();
         }
     };
 }
@@ -123,7 +126,7 @@ function load(){
         for (var i = 0; i < data.length; i++){
             if (data[i].status){
                 doneString += "<li><input type='checkbox' onchange='update(" + i + ",false)' checked='checked' />" +
-                    "<p id='p-" + i + "' onclick='edit(" + i + ")'>" + data[i].text + "</p>" +//点击文本，转到编辑函数
+                    "<p id='p-" + i + "' onclick='edit(" + i + ")' >" + data[i].text + "</p>" +//点击文本，转到编辑函数
                     "<a href='javascript:del(" + i + ")'>-</a></li>";//点击del按钮，跳转到删除函数
                 doneCount++;
             } else {
