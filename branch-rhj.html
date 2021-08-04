@@ -4,33 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todolist</title>
+    <title id="first-title">Todolist</title>
     <link rel="stylesheet" type="text/css" href="todolist.css"> 
 </head>
 <body>
     <div class="container">
         <!-- 输入todo -->    
         <div class="input">
-            <form action="javascript:gettodo()" id="form">
-                <label for="title">ToDoList</label><!--将input和标签title绑定-->
-                <input type="text" id="title" name="title" placeholder=" What needs to be done?" autocomplete="off" />
+            <form action="javascript:getTodo()" id="form">
+                <label for="title" id="first-title">ToDoList </label><!--将input和标签title绑定-->
+                <input type="text" id="title" name="title" placeholder="What needs to be done?" autocomplete="off" />
             </form>
         </div>
         <div class="TodoList">
-            <h2 onclick="save()">Todo <span id="todocount"></span></h2>
+            <h2 id="Todo">Todo <span id="todocount"></span></h2>
             <ol id="todolist" class="demo-box"></ol>
-            <h2>Done <span id="donecount"></span></h2>
-            <ul id="donelist"></ul>
+        
+            <h2 id="Done">Done <span id="donecount"></span></h2>
+            <ol id="donelist"></ol>
         </div>
         <div class="clear">
-            <a href="javascript:clear();">Clear All!</a>
+            <a href="javascript:clear();" style=" text-decoration:none; color: rgb(255, 162, 86); ">Clear All!</a>
         </div>       
     </div>
     <div class="siteFoot">
         <div class="foot">
             <p>Click to edit a todo</p>
             <p>Created by RHJ</p>
-            <p>Email: <a style="color: #586894;" href="https://www.google.com/intl/zh-CN/gmail/about/#">liu_0818@qq.com</a></p>
+            <p>Email: <a style="color: #0138ec;  text-decoration:none" href="https://www.google.com/intl/zh-CN/gmail/about/#">liu_0818@qq.com</a></p>
         </div>
     </div>
     <script type="text/javascript" src="todolist.js"></script>

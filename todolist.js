@@ -22,91 +22,72 @@ function clear(){
 }
 
 //添加(获取）todo
-function gettodo(){
+function getTodo(){
     var obj = new Object;//可优化：输入为空时可不创建新属性，将这步放在else 里面，减少内存使用
-        obj.status = false;
-        obj.time = Date.now();//没用到
-        //obj.del = false;
-    obj.text = document.getElementById("title").value;//加上.value后获取输入文本
-    //alert(obj.text);
+    obj.status = false;
+    obj.text = document.querySelector("#title").value;//加上.value后获取输入文本
     if (obj.text.trim() == "") {
         alert("输入不能为空!");//trim方法的作用：使输入都是空格也会报错
     }else{
-        var data = getlocaldata();
+        var data = getLocalData();
         data.push(obj);
-        savedata(data);
-        var form = document.getElementById("form");
-        form.reset();//重置输入框
+        saveData(data);
+        document.querySelector("#form").reset();//重置输入框
         load();
     }
 }
 
 //获取本地数据
-function getlocaldata(){
-    var collection = localStorage.getItem("localdata");
-    if (collection != null) {
-        return JSON.parse(collection);
+function getLocalData(){
+    let localdata = localStorage.getItem("localdata");
+    if (localdata != null) {
+        return JSON.parse(localdata);
     }else return [];//无本地数据返回空数组
 }
 
 //保存data
-function savedata(data){
+function saveData(data){
     localStorage.setItem("localdata", JSON.stringify(data));//将数组保存在“localdata”字段
 }
 
 //删除todo项
 function del(i){  
-    var data = getlocaldata();
+    var data = getLocalData();
     //click del按钮 触发del
     //data[i].del = true;删除了data[i]，没必要更改del属性
     data.splice(i, 1)[0];//删除第i个（当前）data元素
-    savedata(data);
+    saveData(data);
     load();
 }
 
-//保存分类后的data
-function saveSort() {
-    var todolist = document.getElementById("todolist");
-    var donelist = document.getElementById("donelist");
-    var ts = todolist.getElementsByTagName("p");
-    var ds = donelist.getElementsByTagName("p");
-    var data = [];
-    for (i = 0; i < ts.length; i++) {
-        var todo = { "text": ts[i].innerHTML, "status": false };
-        data.unshift(todo);
-    }
-    for (i = 0; i < ds.length; i++) {
-        var todo = { "text": ds[i].innerHTML, "status": true };
-        data.unshift(todo);
-    }      
-    //savedata(data);
-}
-
 //更新data
-function update(i,text){
-    var data = getlocaldata();
+function upDate(i,text){
+    var data = getLocalData();
     data[i].status = text;
-    savedata(data);
+    saveData(data);
     load();
 }
 
 //编辑todo项
 function edit(i){
-    var p = document.getElementById("p-" + i);
-    title = p.innerHTML;//保存原信息，当输入为空时，保持原信息(data[i].text)不变
-    p.innerHTML = "<input id='input-" + i + "'/>";
-    var input = document.getElementById("input-" + i);//获取输入的内容
+    let data = getLocalData();
+    var p = document.querySelector("#p-" + i);
+    title = data[i].text;//保存原信息，当输入为空时，保持原信息(data[i].text)不变
+    // p.innerHTML = "<input value='" + title + "' id='input-" + i + "'/>";
+    p.innerHTML = `<input id=input-${i} value="${title}"  />`;
+    var input = document.querySelector("#input-" + i);//获取输入的内容
     input.focus();
+    input.setSelectionRange(10000,10000);//将光标移动到文本最后
     input.onblur = function() {
         if (input.value.length == 0) {
             p.innerHTML = title;
-            alert("内容不能为空");
+            // alert("内容不能为空");
         } else {
-            var data = getlocaldata();
-            var todo = data[i];
+            let data = getLocalData();
+            let todo = data[i];
             todo.text = input.value;
             data.splice(i, 1, todo);//替换当前项的text，其余不变
-            savedata(data);
+            saveData(data);
             load();
         }
     };
@@ -114,39 +95,42 @@ function edit(i){
 
 //根据数组显示todo项(todo项 和 done项)
 function load(){
-    var todolist = document.getElementById("todolist");
-    var donelist = document.getElementById("donelist");
-    var collection = localStorage.getItem("localdata");
-    if (collection != null){
-        var data = JSON.parse(collection);
-        var todoCount = 0;
-        var doneCount = 0;
-        var todoString = "";
-        var doneString = "";//初始化计数值和列表
-        for (var i = 0; i < data.length; i++){
+    const localdata = localStorage.getItem("localdata");
+    if (localdata != null){
+        let data = JSON.parse(localdata);
+        let todoCount = 0;
+        let doneCount = 0;
+        let todoString = "";
+        let doneString = "";//初始化计数值和列表
+        for (let i = 0; i < data.length; i++){
             if (data[i].status){
-                doneString += "<li><input type='checkbox' onchange='update(" + i + ",false)' checked='checked' />" +
-                    "<p id='p-" + i + "' onclick='edit(" + i + ")' >" + data[i].text + "</p>" +//点击文本，转到编辑函数
-                    "<a href='javascript:del(" + i + ")'>-</a></li>";//点击del按钮，跳转到删除函数
+                doneString += "<li><input id='donecheck' type='checkbox' onchange='upDate(" + i + ",false)' checked='checked' />" +
+                    `<p id=p-${i} onclick=edit(${i})>${data[i].text}</p>` +
+                    `<button onclick=del(${i})>X</button></li>`;
+                    // "<p id='p-" + i + "' onclick='edit(" + i + ")' >" + data[i].text + "</p>" +//点击文本，转到编辑函数
+                    // "<a href='javascript:del(" + i + ")'>-</a></li>";//点击del按钮，跳转到删除函数
                 doneCount++;
             } else {
-                todoString += "<li><input type='checkbox' onchange='update(" + i + ",true)' />" +
-                    "<p id='p-" + i + "' onclick='edit(" + i + ")'>" + data[i].text + "</p>" +
-                    "<a href='javascript:del(" + i + ")'>-</a></li>";
+                todoString += "<li><input id='doingcheck' type='checkbox' onchange='upDate(" + i + ",true)' />" +
+                    //`<li><input type='checkbox' onchange='upDate(${i},ture)' />` +
+                    `<p id=p-${i} onclick=edit(${i})>${data[i].text}</p>` +
+                    `<button onclick=del(${i})>X</button></li>`;
+                    // "<p id='p-" + i + "' onclick='edit(" + i + ")'>" + data[i].text + "</p>" +
+                    // "<a href='javascript:del(" + i + ")'>-</a></li>";
+                    // 可以使用模版字符串实现
                 todoCount++;
             }
         };
         todocount.innerHTML = todoCount;
         todolist.innerHTML = todoString;//在id=todolist处插入todoString语句，以显示todo项
         donecount.innerHTML = doneCount;
-        donelist.innerHTML = doneString;
+        donelist.innerHTML = doneString;//dom节点插入，dom操作， 可以使用文档片段对象DocumentFragment创建元素
     }else{
         todocount.innerHTML = 0;
         todolist.innerHTML = "";
         donecount.innerHTML = 0;
         donelist.innerHTML = "";
     }
-    saveSort();
 }
 
 window.onload = load;
