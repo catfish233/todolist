@@ -1,0 +1,60 @@
+li{
+  background-color: rgb(218, 204, 189);
+  border-radius: 5px;
+  border: 1px solid #999;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top: 6px;
+  margin-bottom: 6px;
+
+  width:350px;
+}
+
+/* 复选框 */
+[type *= checkbox]{
+  border-radius: 50%;
+  float: left;
+  margin:1px;
+  padding: 1px;
+  margin-left: 3px;
+  width: 16px;
+}
+
+/* 复选框半透明 */
+[type *= checkbox]:checked{
+  opacity: 0.5;
+}
+
+/* 时间 */
+[type *= checkbox]+p{
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+/* todo项的文本 */
+.text{
+  display: inline;
+  margin-bottom: 4px;
+  word-break: break-all;/* 当文本过长时自动换行 */
+}
+
+.input{
+  background-color: rgb(233, 250, 240);
+  margin-top: 4px;
+  margin-bottom: 4px;
+  width:unset;
+}
+
+/* del按钮 */
+.del{
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 100%;
+  background-color: rgb(243, 74, 74);
+  color: white;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: lighter;
+  float: right;
+  margin-right: 5px;
+  margin-bottom: 2px;
+}

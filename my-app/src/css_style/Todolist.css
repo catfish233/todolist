@@ -1,0 +1,27 @@
+.Todolist_div{
+  background-color: rgb(247, 245, 241);
+  position: relative;
+}
+
+.sort{
+  border: 1px solid rgb(247, 245, 241);
+  border-radius: 5px;
+  color: rgb(10, 10, 10);
+  cursor: pointer;
+  font-size: 14px;
+  color: rgb(56, 50, 50);
+  font-weight: normal;
+  margin: 3px;
+  text-align: center;
+}
+
+div:hover > .sort{
+  border: 1px solid #facaca;
+}
+
+#length{
+  display: inline;
+  font-size: 15px;
+  color: rgb(70, 63, 63);
+  margin-right: 55px;
+}

@@ -1,0 +1,14 @@
+body{
+  background-color: rgb(247, 245, 241);
+}
+
+.App {
+  text-align: center;
+}
+
+.input{
+  background-color: rgb(0, 105, 241);
+  height: 70px;
+  padding-left: 82%;
+  width: 100%;
+}

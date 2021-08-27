@@ -1,0 +1,11 @@
+#Clear{
+  border: 1px solid rgb(255, 176, 176);
+  border-radius: 5px;
+  color: rgb(70, 63, 63);
+  background-color: rgb(255, 253, 246);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
+  margin: 4px;
+  text-align: center;
+}
