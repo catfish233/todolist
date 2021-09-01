@@ -1,5 +1,5 @@
 #Clear{
-  border: 1px solid rgb(255, 176, 176);
+  border: 1px solid rgb(250, 184, 184);
   border-radius: 5px;
   color: rgb(70, 63, 63);
   background-color: rgb(255, 253, 246);
@@ -8,4 +8,10 @@
   font-weight: normal;
   margin: 4px;
   text-align: center;
+}
+
+#Clear:hover{
+  border: 1px solid rgb(248, 95, 95);
+  border-radius: 5px;
+  color: rgb(10, 10, 10);
 }

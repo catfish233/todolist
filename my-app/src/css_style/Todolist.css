@@ -15,8 +15,12 @@
   text-align: center;
 }
 
-div:hover > .sort{
-  border: 1px solid #facaca;
+.sort:hover{
+  border: 1px solid #f8bfbf;
+}
+
+.sort:focus{
+  border: 1px solid #fa7272;
 }
 
 #length{

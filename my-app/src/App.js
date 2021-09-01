@@ -23,7 +23,7 @@ export default class App extends Component {
     const newtodos = [todoObj, ...todos];
     this.setState({
       todos: newtodos
-    }, ()=>{this.saveLocalData(this.state)})  //更新state  
+    })  //更新state  
     // this.saveLocalData(this.state);
   }
 
@@ -33,7 +33,7 @@ export default class App extends Component {
     const newtodos = todos.map((Item)=>{return Item.id === newtodo.id ? newtodo : Item});//替换
     this.setState({
       todos: newtodos
-    }, ()=>{this.saveLocalData(this.state)});  //更新state  
+    });  //更新state  
     // this.saveLocalData(this.state);
   }
 
@@ -47,7 +47,7 @@ export default class App extends Component {
     })
     this.setState({
       todos: newtodos
-    }, ()=>{this.saveLocalData(this.state)});//更新state，并同步保存到本地
+    }, () => this.setsort(this.state.todos));//更新state，并分类显示todo项
     // this.saveLocalData(this.state);
   }
 
@@ -59,7 +59,7 @@ export default class App extends Component {
     })
     this.setState({
       todos: newtodos
-    }, ()=>{this.saveLocalData(this.state)});
+    });
     // this.saveLocalData(this.state);
   }
 
@@ -74,10 +74,10 @@ export default class App extends Component {
   //保存本地数据
   saveLocalData(state){
     localStorage.setItem("localdata", JSON.stringify(state));
-    this.setsort(state.todos);
+    // this.setsort(state.todos);
   }
 
-  //todo项分类
+  //todo项分类（使用生命周期函数保存数据、触发这个分类函数会引发死循环）
   setsort(todos){
     const todolist = todos.filter((todoObj)=>{return todoObj.done !== true });
     const donelist = todos.filter((todoObj)=>{return todoObj.done !== false });
@@ -85,6 +85,11 @@ export default class App extends Component {
     this.setState({
       todos: newtodos
     });//更新state
+  }
+
+  //生命周期函数（组件状态更新）将更新的数据保存在本地
+  componentDidUpdate(){
+   this.saveLocalData(this.state);//本地保存数据
   }
 
   render() {

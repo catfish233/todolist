@@ -6,13 +6,15 @@ li{
   margin-right:auto;
   margin-top: 6px;
   margin-bottom: 6px;
-
+  padding: 16px;
+  padding-bottom: 20px;
   width:350px;
 }
 
 /* 复选框 */
 [type *= checkbox]{
   border-radius: 50%;
+  cursor: pointer;
   float: left;
   margin:1px;
   padding: 1px;
@@ -34,27 +36,33 @@ li{
 /* todo项的文本 */
 .text{
   display: inline;
+  font-size: 18px;
   margin-bottom: 4px;
   word-break: break-all;/* 当文本过长时自动换行 */
 }
 
 .input{
   background-color: rgb(233, 250, 240);
-  margin-top: 4px;
-  margin-bottom: 4px;
-  width:unset;
+  margin: 3px;
+  padding: 1px;
+  width:min-content;
+  height: 20px;
 }
 
 /* del按钮 */
 .del{
   border: 1px solid rgb(255, 255, 255);
-  border-radius: 100%;
+  border-radius: 50%;
   background-color: rgb(243, 74, 74);
   color: white;
   cursor: pointer;
-  font-size: 10px;
+  display: inline;
+  font-size: 2px;
   font-weight: lighter;
   float: right;
-  margin-right: 5px;
-  margin-bottom: 2px;
+}
+
+#Time{
+  color: rgb(88, 88, 88);
+  font-size: 13px;
 }
